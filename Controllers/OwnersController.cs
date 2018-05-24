@@ -18,7 +18,7 @@ namespace BenWeb.Controllers
         public OwnersController(IOwnerRepository ownerRepository)
         {
             _ownerRepository = ownerRepository;
-        } 
+        }
 
         [HttpPost("action")]
         public IActionResult AddOwner([FromBody] Owner owner)

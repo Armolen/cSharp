@@ -30,8 +30,6 @@ namespace BenWeb.Models.Repositories
             return owner.OwnerId;
         }
 
-
-
         public Owner GetOwner(int ownerId)
         {
             if (ownerId <= 0)
