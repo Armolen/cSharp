@@ -14,10 +14,14 @@ namespace BenWeb.Controllers
     public class PropertyController : Controller
     {
         private readonly IPropertyRepository _propertyRepository;
+        private readonly IAddressRepository _addressRepository;
+        private readonly IOwnerRepository _ownerRepository;
 
-        public PropertyController(IPropertyRepository propertyRepository)
+        public PropertyController(IPropertyRepository propertyRepository, IAddressRepository addressRepository, IOwnerRepository ownerRepository)
         {
             _propertyRepository = propertyRepository;
+            _addressRepository = addressRepository;
+            _ownerRepository = ownerRepository;
         }
 
         [HttpGet("[action]")]
