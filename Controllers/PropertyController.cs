@@ -32,7 +32,75 @@ namespace BenWeb.Controllers
         [HttpPost("[action]")]
         public IActionResult AddProperty([FromBody] Property property)
         {
-            return NotFound();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var owner = _ownerRepository.GetOwner(property.OwnerId);
+            if (owner == null)
+            {
+                return NotFound("Cannot find owner with provided ownerId");
+            }
+            var address = _addressRepository.GetAddress(property.AddressId);
+            if (address == null)
+            {
+                return NotFound("Cannot find address with provided addressId");
+            }
+            _propertyRepository.AddProperty(property, address, owner);
+            return new JsonResult(property.Id);
         }
+
+        [HttpGet("[action]")]
+        public IActionResult GetProperty(int propertyId)
+        {
+            if(propertyId <= 0 )
+            {
+                return BadRequest("Id cannot be less than 1");
+            }
+            return new JsonResult(_propertyRepository.GetProperty(propertyId));
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult UpdateProperty([FromBody] Property property)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _propertyRepository.UpdateProperty(property);
+            return new JsonResult(property.Id);
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult DeleteProperty(int propertyId)
+        {
+            if (propertyId <= 0)
+            {
+                return BadRequest("Id less than 1...");
+            }
+            var property = _propertyRepository.GetProperty(propertyId);
+            if(property == null)
+            {
+                return NotFound("Wrong property id...");
+            }
+
+            var owner = _ownerRepository.GetOwner(property.OwnerId);
+            if (owner == null)
+            {
+                return NotFound("Wrong owner id...");
+            }
+
+            var address = _addressRepository.GetAddress(property.AddressId);
+            if (address == null)
+            {
+                return NotFound("Wrong address id...");
+            }
+
+            _propertyRepository.DeleteProperty(property, address, owner);
+            return new JsonResult(property.Id);
+        }
+
     }
 }
